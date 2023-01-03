@@ -13,9 +13,11 @@ const customerSchema = new mongoose.Schema({
 })
 
 customerSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({ _id: this._id }, process.env.JWT_TOKEN, { expiresIn: '7d' })
-    return token
-}
+	const token = jwt.sign({ _id: this._id }, process.env.JWT_TOKEN, {
+		expiresIn: "7d",
+	});
+	return token;
+};
 
 const Customers = mongoose.model('customers', customerSchema)
 

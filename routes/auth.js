@@ -4,7 +4,9 @@ const { Customers } = require('../models/customers')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
 
+const cors = require('cors')
 
+app.use(cors())
 
 app.post('/', async (req, res) => {
     try {
@@ -27,14 +29,15 @@ app.post('/', async (req, res) => {
           res.status(200).send({data: token, message: 'Logged in successfully'})
 
     } catch (err) {
-        res.status(500).send({message: 'Internal Server Error'})
+        console.log(err)
+        res.status(500).json({message: 'Internal Server Error'})
     }
 })
 
 
 const validate = (data) => {
     const schema = joi.object({
-        name: joi.string().name().required().label('Name'),
+        name: joi.string().required().label('Name'),
         password: joi.string().required().label('Password'),
         
     })
