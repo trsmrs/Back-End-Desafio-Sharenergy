@@ -14,7 +14,7 @@ module.exports = () =>{
     const connectionParams = {
         useNewUrlParser: true,
     }
-
+    
     try{
       mongoose.connect(process.env.MONGODB_URI, connectionParams)
       console.log('Connected to database successfully')
