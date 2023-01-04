@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const { Customers } = require('../models/customers')
+const { Admin } = require('../models/admins')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
 
@@ -14,18 +14,20 @@ app.post('/', async (req, res) => {
         if(error)
         return res.status(400).send({message: error.details[0].message})
 
-        const customer = await Customers.findOne({name: req.body.name})
-        if(!customer)
+        const admins = await Admin.findOne({name: req.body.name})
+        if(!admins)
+        
         return res.status(401).send({message: 'invalid User or Password'})
 
         const validPassword = await bcrypt.compare(
-            req.body.password, customer.password
+            req.body.password, admins.password
         )
 
         if(!validPassword)
+        
           return res.status(401).send({message: 'invalid User or Password'})
         
-          const token = customer.generateAuthToken()
+          const token = admins.generateAuthToken()
           res.status(200).send({data: token, message: 'Logged in successfully'})
 
     } catch (err) {

@@ -5,7 +5,9 @@ const app = express()
 const connection = require('./db')
 
 const customersRoutes = require('./routes/customers')
-const authRoutes = require('./routes/auth')
+const authRoutes = require('./auth/auth')
+const authAdminRoutes = require('./auth/admin_auth')
+const adminRoutes = require('./routes/admins')
 
 // conexão com o banco de dados aqui
 connection()
@@ -24,8 +26,6 @@ app.use((req, res, next)=>{
     next()
 })
 
-
-
 app.options("*", cors({ origin: 'http://127.0.0.1:8080', optionsSuccessStatus: 200 }));
 
 app.use(cors({ origin: "http://127.0.0.1:8080", optionsSuccessStatus: 200 }));
@@ -33,6 +33,9 @@ app.use(cors({ origin: "http://127.0.0.1:8080", optionsSuccessStatus: 200 }));
 // Rotas
 app.use('/api/customers', customersRoutes)
 app.use('/api/auth',authRoutes)
+
+app.use('/api/admins',adminRoutes)
+app.use('/api/admin',authAdminRoutes)
 
 
 

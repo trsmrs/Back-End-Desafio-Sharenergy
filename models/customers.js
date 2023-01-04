@@ -8,8 +8,8 @@ const customerSchema = new mongoose.Schema({
     email: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
-    cpf: { type: String, required: true },
-    password: { type: String, required: true }
+    cpf: { type: String, required: true }
+    
 })
 
 customerSchema.methods.generateAuthToken = function () {
@@ -19,7 +19,9 @@ customerSchema.methods.generateAuthToken = function () {
 	return token;
 };
 
+
 const Customers = mongoose.model('customers', customerSchema)
+
 
 
 const validate = (data) => {
@@ -29,7 +31,7 @@ const validate = (data) => {
    phone: joi.string().required().label('Phone'),
    address: joi.string().required().label('Address'),
    cpf: joi.string().required().label('Cpf'),
-   password: passwordComplexity().required().label('Password')
+   password: joi.string().label('Password')
  })
   return schema.validate(data)
 }

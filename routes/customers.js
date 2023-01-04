@@ -8,7 +8,7 @@ app.use(cors({
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "preflightContinue": false,
     "optionsSuccessStatus": 204
-  }))
+}))
 
 
 const { Customers, validate } = require('../models/customers')
@@ -38,21 +38,25 @@ app.post('/', async (req, res) => {
     try {
         const { error } = validate(req.body)
         if (error) {
+            console.log(error)
             return res.status(400).json({ message: error.details[0].message })
         }
-        const { name, email, phone, address, cpf, password } = req.body
-        const customers = await Customers.findOne({ email })
+        // const { name, email, phone, address, cpf, password } = req.body
+        const { name, email, phone, address, cpf } = req.body
+        const customers = await Customers.findOne({ name })
 
         if (customers) {
             return res.status(422)
-                .json({ message: `User ${email} already exists.` })
+                .json({ message: `User ${name} already exists.` })
         }
-        const salt = await bcrypt.genSalt(Number(process.env.SALT))
-        const hashPassword = await bcrypt.hash(password, salt)
+        // const salt = await bcrypt.genSalt(Number(process.env.SALT))
+        // const hashPassword = await bcrypt.hash(password, salt)
 
-        await Customers({ name, email, phone, address, cpf, password: hashPassword }).save()
+        // await Customers({ name, email, phone, address, cpf, password: hashPassword }).save()
+        await Customers({ name, email, phone, address, cpf }).save()
         res.status(201).json({ message: 'Customer created successfuly' })
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'internal Server Error', error })
     }
 })
@@ -84,17 +88,18 @@ app.patch('/:id', async (req, res, next) => {
 
         const newCustomers = await Customers.updateOne({ _id: id },
             { name, email, phone, address, cpf })
-        if (newCustomers) { console.log(newCustomers) }
+        if (newCustomers) {
+            // console.log(newCustomers) 
+        }
 
         if (!newCustomers) {
             res.status(422).json({ message: "User Not Found" })
         }
         res.status(200).json({ message: 'Customer updated successfuly' })
     } catch (error) {
-        
+
         res.status(500).json({ message: 'internal !Server! Error', error })
-       
-    
+
     }
 })
 
@@ -109,7 +114,7 @@ app.delete('/:id', async (req, res) => {
     }
     try {
         await Customers.deleteOne({ _id: id })
-        
+
 
         res.status(200).json({ message: 'Customer deleted successfully' })
 
