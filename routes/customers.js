@@ -3,7 +3,12 @@ const app = express()
 const cors = require('cors')
 
 
-app.use(cors('*'))
+app.use(cors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  }))
 
 
 const { Customers, validate } = require('../models/customers')
@@ -70,18 +75,15 @@ app.get('/:id', async (req, res) => {
 })
 
 // Atualização de clientes por id
-app.patch('/:id', async (req, res) => {
+app.patch('/:id', async (req, res, next) => {
     const id = req.params.id
-    const { name, email, phone, address, cpf, password } = req.body
+    const { name, email, phone, address, cpf } = req.body
 
 
     try {
 
-        const salt = await bcrypt.genSalt(Number(process.env.SALT))
-        const hashPassword = await bcrypt.hash(password, salt)
-
         const newCustomers = await Customers.updateOne({ _id: id },
-            { name, email, phone, address, cpf, password: hashPassword })
+            { name, email, phone, address, cpf })
         if (newCustomers) { console.log(newCustomers) }
 
         if (!newCustomers) {
@@ -89,7 +91,10 @@ app.patch('/:id', async (req, res) => {
         }
         res.status(200).json({ message: 'Customer updated successfuly' })
     } catch (error) {
-        res.status(500).json({ message: 'internal Server Error', error })
+        
+        res.status(500).json({ message: 'internal !Server! Error', error })
+       
+    
     }
 })
 
