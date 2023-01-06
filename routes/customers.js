@@ -24,7 +24,7 @@ app.get('/', async (req, res) => {
 
         const customers = await Customers.find()
         if (!customers) {
-            res.status(422).json({ message: 'Customer not found!' })
+            res.status(422).json({ message: 'Cliente não encontrado!' })
             return
         }
         res.status(200).json(customers)
@@ -41,20 +41,14 @@ app.post('/', async (req, res) => {
             console.log(error)
             return res.status(400).json({ message: error.details[0].message })
         }
-        // const { name, email, phone, address, cpf, password } = req.body
+
         const { name, email, phone, address, cpf } = req.body
-        const customers = await Customers.findOne({ name })
+        // const customers = await Customers.findOne({ name })
 
-        if (customers) {
-            return res.status(422)
-                .json({ message: `User ${name} already exists.` })
-        }
-        // const salt = await bcrypt.genSalt(Number(process.env.SALT))
-        // const hashPassword = await bcrypt.hash(password, salt)
-
-        // await Customers({ name, email, phone, address, cpf, password: hashPassword }).save()
+     
         await Customers({ name, email, phone, address, cpf }).save()
-        res.status(201).json({ message: 'Customer created successfuly' })
+        res.status(201).json({ message: 'Cliente criado com sucesso!' })
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'internal Server Error', error })
@@ -68,11 +62,12 @@ app.get('/:id', async (req, res) => {
         const customers = await Customers.findOne({ _id: id })
 
         if (!customers) {
-            res.status(422).json({ message: 'Customer not found!' })
+            res.status(422).json({ message: 'Cliente não encontrado!' })
             return
         }
 
         res.status(200).json(customers)
+
     } catch (error) {
         res.status(500).json({ message: 'internal Server Error', error })
     }
@@ -93,9 +88,9 @@ app.patch('/:id', async (req, res, next) => {
         }
 
         if (!newCustomers) {
-            res.status(422).json({ message: "User Not Found" })
+            res.status(422).json({ message: "Cliente não encontrado" })
         }
-        res.status(200).json({ message: 'Customer updated successfuly' })
+        res.status(200).json({ message: 'Cliente atualizado com sucesso!' })
     } catch (error) {
 
         res.status(500).json({ message: 'internal !Server! Error', error })
@@ -109,14 +104,14 @@ app.delete('/:id', async (req, res) => {
     const customers = await Customers.findOne({ _id: id })
 
     if (!customers) {
-        res.status(422).json({ message: 'Customer was not found' })
+        res.status(422).json({ message: 'Cliente não encontrado' })
         return
     }
     try {
         await Customers.deleteOne({ _id: id })
 
 
-        res.status(200).json({ message: 'Customer deleted successfully' })
+        res.status(200).json({ message: 'Cliente deletado com sucesso!' })
 
     } catch (error) {
         res.status(500).json({ message: 'internal Server Error', error })

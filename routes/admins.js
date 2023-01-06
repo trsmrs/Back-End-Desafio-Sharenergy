@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const bcrypt = require('bcrypt')
+const { Admin, validate } = require('../models/admins')
 
 
 app.use(cors({
@@ -12,11 +14,6 @@ app.use(cors({
 
 
 
-const { Admin, validate } = require('../models/admins')
-const bcrypt = require('bcrypt')
-
-
-
 // ----------------------  Funcionalidades do CRUD ----------------------------------
 
 // Listagem de Admins
@@ -25,7 +22,7 @@ app.get('/', async (req, res) => {
 
         const admins = await Admin.find()
         if (!admins) {
-            res.status(422).json({ message: 'Customer not found!' })
+            res.status(422).json({ message: 'Admin não encontrado!' })
             return
         }
         res.status(200).json(admins)
@@ -47,14 +44,14 @@ app.post('/', async (req, res) => {
 
         if (admin) {
             return res.status(422)
-                .json({ message: `User ${name} already exists.` })
+                .json({ message: `Admin ${name} já cadastrado.` })
         }
         const salt = await bcrypt.genSalt(Number(process.env.SALT))
         const hashPassword = await bcrypt.hash(password, salt)
 
         await Admin({ name, password: hashPassword }).save()
        
-        res.status(201).json({ message: 'Customer created successfuly' })
+        res.status(201).json({ message: 'Admin cadastrado com sucesso!' })
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'internal Server Error', error })

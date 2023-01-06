@@ -26,16 +26,16 @@ app.use((req, res, next)=>{
     next()
 })
 
+app.use(cors({ origin: "http://127.0.0.1:8080", optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: 'http://127.0.0.1:8080', optionsSuccessStatus: 200 }));
 
-app.use(cors({ origin: "http://127.0.0.1:8080", optionsSuccessStatus: 200 }));
 
 // Rotas
+app.use('/api/admins',adminRoutes)
 app.use('/api/customers', customersRoutes)
 app.use('/api/auth',authRoutes)
 
-app.use('/api/admins',adminRoutes)
-app.use('/api/admin',authAdminRoutes)
+// app.use('/api/admin',authAdminRoutes)
 
 
 

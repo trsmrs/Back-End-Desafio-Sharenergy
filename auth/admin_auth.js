@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express()
-const { Admin } = require('../models/admins')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
-
 const cors = require('cors')
+const { Admin } = require('../models/admins')
+
 
 app.use(cors())
 
