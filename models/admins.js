@@ -4,7 +4,6 @@ const joi = require('joi')
 
 
 
-
 const adminSchema = new mongoose.Schema({
     name: { type: String, required: true },
     password: { type: String, required: false }
@@ -12,7 +11,7 @@ const adminSchema = new mongoose.Schema({
 
 adminSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ _id: this._id }, process.env.JWT_TOKEN, {
-        expiresIn: "2y",
+        expiresIn: "2h",
     });
     return token;
 };
